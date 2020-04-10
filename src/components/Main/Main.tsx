@@ -4,12 +4,18 @@ import Grid from "@material-ui/core/Grid";
 import NewCard from "../NewCard/NewCard";
 
 
+
+
 const Main:React.FC = () => {
-    const [columns, setColumns] = useState([]);
+
+    const [columns, setColumns] = useState([] as any);
+    const addNewColumn = (name:string) => {
+        setColumns((prevState: []) => [...prevState, name]);
+    };
     return (
         <Grid container spacing={2}>
-            <DashboardCard/>
-            <NewCard/>
+            {columns.length !== 0 ? columns.map((name:string) => <DashboardCard name={name}/>) : null}
+            <NewCard addNewColumn={addNewColumn}/>
         </Grid>
     )
 };

@@ -6,7 +6,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Add} from '@material-ui/icons';
 import {primaryColor, secondaryColor} from "../../theme/variables"
 
-
 const useStyles = makeStyles({
     root: {
         width: "275px",
@@ -44,13 +43,13 @@ const useStyles = makeStyles({
 });
 
 
-const DashboardCard:React.FC = () => {
+const DashboardCard:React.FC<{name:string}> = ({name}) => {
     const classes = useStyles();
     return (
         <Grid item>
             <Card className={classes.root}>
                 <CardContent className={classes.cardContent}>
-                    <TextField id="outlined-basic"  variant="outlined" defaultValue="Name" className={classes.textField}/>
+                    <TextField id="outlined-basic"  variant="outlined" defaultValue={name} className={classes.textField}/>
                 </CardContent>
                 <CardActions>
                     <Button size="medium" fullWidth className={classes.button}>
