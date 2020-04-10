@@ -1,13 +1,9 @@
 import React, {useState} from "react";
 import DashboardCard from "../DashboardCard";
 import Grid from "@material-ui/core/Grid";
-import NewCard from "../NewCard/NewCard";
-
-
-
+import NewCard from "../NewCard";
 
 const Main:React.FC = () => {
-
     const [columns, setColumns] = useState([] as any);
     const addNewColumn = (name:string) => {
         setColumns((prevState: []) => [...prevState, name]);

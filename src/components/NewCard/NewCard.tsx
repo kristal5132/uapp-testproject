@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import {Button, Card, CardActions, IconButton, TextField, Grid} from "@material-ui/core";
 import {Add} from '@material-ui/icons';
 import {makeStyles} from "@material-ui/core/styles";
-import {primaryColor} from "../../theme/variables";
 import Close from '@material-ui/icons/Close';
 
 
@@ -10,9 +9,11 @@ const useStyles = makeStyles({
     button: {
         justifyContent: "flex-start",
         textTransform: "inherit",
-        color: primaryColor,
         backgroundColor: "rgba(255,255,255,0.7)",
-        height: "40px"
+        height: "40px",
+        '&:hover': {
+            backgroundColor: "rgba(255,255,255,0.5)"
+        }
     },
     cardAction: {
         alignItems: "flex-start",
@@ -69,7 +70,7 @@ const NewCard: React.FC<{ addNewColumn: (name: string) => void }> = ({addNewColu
         <Grid item>
             <CardActions className={displayAddCard ? `${classes.cardAction} ${classes.displayCard}` :
                 `${classes.cardAction} ${classes.dontDisplayCard}`}>
-                <Button size="medium" fullWidth className={classes.button} onClick={toggleAddCardButton}>
+                <Button size="medium" color="primary" fullWidth className={classes.button} onClick={toggleAddCardButton}>
                     <Add fontSize="small"/>
                     Добавить колонку
                 </Button>
