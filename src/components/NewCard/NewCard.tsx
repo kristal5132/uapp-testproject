@@ -4,7 +4,6 @@ import {Add} from '@material-ui/icons';
 import {makeStyles} from "@material-ui/core/styles";
 import {primaryColor} from "../../theme/variables";
 import Close from '@material-ui/icons/Close';
-import classNames from 'classnames';
 
 
 const useStyles = makeStyles({
@@ -45,7 +44,7 @@ const useStyles = makeStyles({
 });
 
 
-const NewCard = () => {
+const NewCard:React.FC = () => {
     const classes = useStyles();
     const [isActiveAddCard, setIsActiveAddCard] = useState(false);
     const [displayAddCard, setDisplayAddCard] = useState(true);
@@ -57,8 +56,8 @@ const NewCard = () => {
 
     return (
         <Grid item>
-            <CardActions className={displayAddCard? classNames(classes.cardAction, classes.displayCard):
-                classNames(classes.cardAction, classes.dontDisplayCard)}>
+            <CardActions className={displayAddCard? `${classes.cardAction} ${classes.displayCard}` :
+                `${classes.cardAction} ${classes.dontDisplayCard}`}>
                 <Button size="medium" fullWidth className={classes.button} onClick={() => toggleAddCardButton()}>
                     <Add fontSize="small"/>
                     Добавить колонку
