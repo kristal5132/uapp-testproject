@@ -46,7 +46,6 @@ const useStyles = makeStyles({
   },
 });
 
-
 const NewCard: React.FC<{ addNewColumn: (name: string) => void }> = ({ addNewColumn }) => {
   const classes = useStyles();
   const [isActiveAddCard, setIsActiveAddCard] = useState(false);
