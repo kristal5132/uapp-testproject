@@ -1,17 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
+import { useSelector } from 'react-redux';
 import DashboardCard from '../DashboardCard';
-import NewCard from '../NewCard';
+import NewColumn from '../NewColumn';
+import { Column } from '../../models/column';
+import { DashboardState } from '../../models/dashboardState';
 
 const Main: React.FC = () => {
-  const [columns, setColumns] = useState([] as any);
-  const addNewColumn = (name: string) => {
-    setColumns((prevState: []) => [...prevState, name]);
-  };
+  const columns = useSelector((state: {columns: DashboardState}) => state.columns.columns);
+
+  useEffect(() => {
+    localStorage.setItem('columns', JSON.stringify(columns));
+  }, [columns]);
+
   return (
     <Grid container spacing={2}>
-      {columns.length !== 0 ? columns.map((name: string) => <DashboardCard name={name} />) : null}
-      <NewCard addNewColumn={addNewColumn} />
+      {columns.length > 0
+        && (columns as Column[]).map((obj: Column) => (
+          <DashboardCard
+            key={obj.id}
+            columnObject={obj}
+          />
+        ))}
+      <NewColumn />
     </Grid>
   );
 };

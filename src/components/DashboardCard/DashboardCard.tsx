@@ -1,11 +1,14 @@
-import React from 'react';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import React, { useState } from 'react';
 import {
-  Button, TextField, CardActions, Grid, Theme,
+  TextField, Grid, Theme, Card, CardContent,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Add } from '@material-ui/icons';
+import {useDispatch} from 'react-redux';
+import NewCard from '../NewCard';
+import ColumnCard from '../ColumnCard';
+import { IColumnCard } from '../../models/columnCardModel';
+import { Column } from '../../models/column';
+import { changeColumnName } from '../../actions/columns';
 
 const useStyles = makeStyles((theme: Theme) => {
   const { palette } = theme;
@@ -24,43 +27,36 @@ const useStyles = makeStyles((theme: Theme) => {
     textField: {
       height: '35px',
       flexDirection: 'row',
-      /* "&.MuiOutlinedInput-root": {
-                fieldset: {
-                    border: "none"
-                }
-            },
-            "&.MuiOutlinedInput-input": {
-                input: {
-                    fontWeight: "600",
-                    color: palette.primary.main
-                }
-            },
-            "&.Mui-focused": {
-                fieldset: {
-                    border: "2px solid",
-                    color: "#FFFFFF",
-                    cursor: "text"
-                }
-            } */
     },
   };
 });
 
 
-const DashboardCard: React.FC<{name: string}> = ({ name }) => {
+const DashboardCard: React.FC<{ columnObject: Column }> = ({ columnObject }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const [inputValue, setInputValue] = useState(columnObject.name);
+
+  const handleColumnNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+    dispatch(changeColumnName(event.target.value, columnObject.id));
+  };
+
   return (
     <Grid item>
       <Card className={classes.root}>
         <CardContent className={classes.cardContent}>
-          <TextField id="outlined-basic" variant="outlined" defaultValue={name} className={classes.textField} />
+          <TextField variant="outlined" value={inputValue} onChange={handleColumnNameChange} className={classes.textField} />
         </CardContent>
-        <CardActions>
-          <Button size="medium" fullWidth className={classes.button}>
-            <Add fontSize="small" />
-            Добавить карточку
-          </Button>
-        </CardActions>
+        {columnObject.cards.length > 0
+          ? (columnObject.cards as Array<IColumnCard>).map((obj: IColumnCard) => (
+            <ColumnCard
+              key={obj.id}
+              name={obj.name}
+            />
+          ))
+          : null}
+        <NewCard columnId={columnObject.id} />
       </Card>
     </Grid>
   );

@@ -1,1 +1,1 @@
-export { default } from './NewCard';
+export { default } from './NewColumn';
