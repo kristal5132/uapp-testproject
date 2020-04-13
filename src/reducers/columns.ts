@@ -1,24 +1,19 @@
-import {ColumnsActions, UserColumnActions} from '../actions/columns';
-import {DashboardState} from '../models/dashboardState';
-import {Column} from '../models/column';
-import {loadState} from '../localStorage';
+import { ColumnsActions, UserColumnActions } from '../actions/columns';
+import { DashboardState } from '../models/dashboardState';
+import { Column } from '../models/column';
+import { loadState } from '../localStorage';
+import { Columns } from '../models/columns';
 
 const loadedState = loadState();
-const initialState: DashboardState = {
-  columns: loadedState !== undefined ? loadedState : [],
-};
+const initialState: DashboardState = loadedState !== undefined ? loadedState : [];
 
 export const columnsReducer = (state = initialState, action: UserColumnActions) => {
   switch (action.type) {
     case ColumnsActions.ADD_NEW_COLUMN:
-      return {
-        ...state,
-        columns: [...state.columns, action.payload],
-      };
+      return [...state, action.payload];
     case ColumnsActions.ADD_NEW_CARD:
-      return {
-        ...state,
-        columns: (state.columns as Column[]).map((obj: Column) => {
+      return (
+        (state as Columns).map((obj: Column) => {
           if (obj.id === action.payloadId) {
             return {
               ...obj,
@@ -26,12 +21,11 @@ export const columnsReducer = (state = initialState, action: UserColumnActions) 
             };
           }
           return obj;
-        }),
-      };
+        })
+      );
     case ColumnsActions.CHANGE_COLUMN_NAME:
-      return {
-        ...state,
-        columns: (state.columns as Column[]).map((obj: Column) => {
+      return (
+        (state as Columns).map((obj: Column) => {
           if (obj.id === action.payloadId) {
             return {
               ...obj,
@@ -39,8 +33,8 @@ export const columnsReducer = (state = initialState, action: UserColumnActions) 
             };
           }
           return obj;
-        }),
-      };
+        })
+      );
     default:
       return state;
   }

@@ -1,7 +1,7 @@
 import { IColumnCard } from './columnCardModel';
 
 export interface Column {
-	id: string,
-	name: string,
-	cards: [] | IColumnCard[]
+	id: string;
+	name: string;
+	cards: [] | IColumnCard[];
 }

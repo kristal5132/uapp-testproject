@@ -4,10 +4,11 @@ import { useSelector } from 'react-redux';
 import DashboardCard from '../DashboardCard';
 import NewColumn from '../NewColumn';
 import { Column } from '../../models/column';
-import { DashboardState } from '../../models/dashboardState';
+import { State } from '../../models/dashboardState';
+
 
 const Main: React.FC = () => {
-  const columns = useSelector((state: {columns: DashboardState}) => state.columns.columns);
+  const columns = useSelector((state: State) => state.columns);
 
   useEffect(() => {
     localStorage.setItem('columns', JSON.stringify(columns));

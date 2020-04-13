@@ -3,12 +3,13 @@ import {
   TextField, Grid, Theme, Card, CardContent,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import {useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import NewCard from '../NewCard';
 import ColumnCard from '../ColumnCard';
 import { IColumnCard } from '../../models/columnCardModel';
 import { Column } from '../../models/column';
 import { changeColumnName } from '../../actions/columns';
+import { Cards } from '../../models/cards';
 
 const useStyles = makeStyles((theme: Theme) => {
   const { palette } = theme;
@@ -49,7 +50,7 @@ const DashboardCard: React.FC<{ columnObject: Column }> = ({ columnObject }) => 
           <TextField variant="outlined" value={inputValue} onChange={handleColumnNameChange} className={classes.textField} />
         </CardContent>
         {columnObject.cards.length > 0
-          ? (columnObject.cards as Array<IColumnCard>).map((obj: IColumnCard) => (
+          ? (columnObject.cards as Cards).map((obj: IColumnCard) => (
             <ColumnCard
               key={obj.id}
               name={obj.name}

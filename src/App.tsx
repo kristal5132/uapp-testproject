@@ -9,7 +9,7 @@ const useStyles = makeStyles({
   root: {
     backgroundColor: '#81AAFE',
     height: '100vh',
-    padding: '20px 30px 0 30px',
+    padding: '20px 30px 0',
   },
   headerWrapper: {
     height: '70px',

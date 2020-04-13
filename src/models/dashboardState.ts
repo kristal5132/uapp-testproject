@@ -1,5 +1,8 @@
-import {Column} from './column';
+import { Columns } from './columns';
 
-export interface DashboardState  {
-  columns:  Column[] | []
+export interface State {
+  columns: DashboardState;
 }
+
+export type DashboardState =
+  Columns | []
