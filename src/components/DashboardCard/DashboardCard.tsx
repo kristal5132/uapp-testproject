@@ -1,66 +1,66 @@
-import React, {useState} from "react";
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import {Button,TextField,CardActions, Grid} from '@material-ui/core';
-import {makeStyles} from "@material-ui/core/styles";
-import {Add} from '@material-ui/icons';
-import {primaryColor, secondaryColor} from "../../theme/variables"
+import React, { useState } from 'react';
+import {
+  TextField, Grid, Theme, Card, CardContent,
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux';
+import NewCard from '../NewCard';
+import ColumnCard from '../ColumnCard';
+import { IColumnCard } from '../../models/columnCardModel';
+import { Column } from '../../models/column';
+import { changeColumnName } from '../../actions/columns';
+import { Cards } from '../../models/cards';
 
-
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => {
+  const { palette } = theme;
+  return {
     root: {
-        width: "275px",
+      width: '275px',
     },
     button: {
-        justifyContent: "flex-start",
-        textTransform: "inherit",
-        color: primaryColor
+      justifyContent: 'flex-start',
+      textTransform: 'inherit',
+      color: palette.primary.main,
     },
     cardContent: {
-        padding: "8px 16px 8px 16px"
+      padding: '8px 16px 8px 16px',
     },
     textField: {
-        height: "35px",
-        flexDirection: "row",
-        "&.MuiOutlinedInput-root": {
-            fieldset: {
-                border: "none"
-            }
-        },
-        "&.MuiOutlinedInput-input": {
-            input: {
-                fontWeight: "600",
-                color: primaryColor
-            }
-        },
-        "&.Mui-focused": {
-            fieldset: {
-                border: "2px solid",
-                color: secondaryColor,
-                cursor: "text"
-            }
-        }
-    }
+      height: '35px',
+      flexDirection: 'row',
+    },
+  };
 });
 
 
-const DashboardCard:React.FC = () => {
-    const classes = useStyles();
-    return (
-        <Grid item>
-            <Card className={classes.root}>
-                <CardContent className={classes.cardContent}>
-                    <TextField id="outlined-basic"  variant="outlined" defaultValue="Name" className={classes.textField}/>
-                </CardContent>
-                <CardActions>
-                    <Button size="medium" fullWidth className={classes.button}>
-                        <Add fontSize="small"/>
-                        Добавить карточку
-                    </Button>
-                </CardActions>
-            </Card>
-        </Grid>
-    )
+const DashboardCard: React.FC<{ columnObject: Column }> = ({ columnObject }) => {
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const [inputValue, setInputValue] = useState(columnObject.name);
+
+  const handleColumnNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+    dispatch(changeColumnName(event.target.value, columnObject.id));
+  };
+
+  return (
+    <Grid item>
+      <Card className={classes.root}>
+        <CardContent className={classes.cardContent}>
+          <TextField variant="outlined" value={inputValue} onChange={handleColumnNameChange} className={classes.textField} />
+        </CardContent>
+        {columnObject.cards.length > 0
+          ? (columnObject.cards as Cards).map((obj: IColumnCard) => (
+            <ColumnCard
+              key={obj.id}
+              name={obj.name}
+            />
+          ))
+          : null}
+        <NewCard columnId={columnObject.id} />
+      </Card>
+    </Grid>
+  );
 };
 
-export default DashboardCard
+export default DashboardCard;
