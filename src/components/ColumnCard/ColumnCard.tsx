@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Grid, Card, CardContent, Typography, Theme,
+  Grid, Card, CardContent, Typography, Theme, Modal,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { Draggable } from 'react-beautiful-dnd';
+import CardModal from '../CardModal';
 
 const useStyles = makeStyles((theme: Theme) => {
   const { palette } = theme;
@@ -21,16 +23,46 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-const ColumnCard: React.FC<{ name: string }> = ({ name }) => {
+// just need to use another index for draggable object,
+// so I'm using this typing instead <IColumnCard>
+const ColumnCard: React.FC <{name: string; id: string; index: number}> = ({ name, id, index }) => {
+  /* const [modalToggler, setModalToggler] = useState(false);
+
+  const handleModalClose = () => {
+    setModalToggler(false);
+  };
+  const onCardOpen = () => {
+    setModalToggler(true);
+  }; */
+
   const classes = useStyles();
   return (
-    <Grid justify="center" container item>
-      <Card className={classes.root}>
-        <CardContent className={classes.cardContent}>
-          <Typography>{name}</Typography>
-        </CardContent>
-      </Card>
-    </Grid>
+    <Draggable draggableId={id} index={index}>
+      {(provided) => (
+        <Grid
+          justify="center"
+          container
+          item
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          <Card className={classes.root}>
+            <CardContent className={classes.cardContent}>
+              <Typography>{name}</Typography>
+            </CardContent>
+          </Card>
+          {/* <Modal
+            open={modalToggler}
+            onClose={handleModalClose}
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+          >
+            <CardModal/>
+          </Modal> */}
+        </Grid>
+      )}
+    </Draggable>
   );
 };
 

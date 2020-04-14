@@ -1,6 +1,6 @@
 export interface IColumnCard {
-	id: string,
-	name: string
-	description?: string,
-	date?: string
+	id: string;
+	name: string;
+	description?: string;
+	date?: string;
 }

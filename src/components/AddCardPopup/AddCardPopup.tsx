@@ -19,7 +19,7 @@ const useStyles = makeStyles({
   },
   cardAction: {
     alignItems: 'flex-start',
-    width: '275px',
+    width: '260px',
     paddingTop: '0',
   },
   cardAdd: {
@@ -59,7 +59,7 @@ const AddCardPopup: React.FC<AddNewCard> = (
       >
         <Button size="medium" color="primary" fullWidth className={classes.button} onClick={toggleAddCardButton}>
           <Add fontSize="small" />
-          Добавить колонку
+          {label}
         </Button>
       </CardActions>
       <Card className={isActiveAddCard ? classes.displayCard : classes.dontDisplayCard}>

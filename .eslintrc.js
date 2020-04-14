@@ -67,6 +67,7 @@ module.exports = {
     'react/button-has-type': error,
     'no-underscore-dangle': off,
     'lines-between-class-members': off,
-    'react/jsx-props-no-spreading': off
+    'react/jsx-props-no-spreading': off,
+    'linebreak-style': ['error', 'windows']
   }
 };

@@ -6,11 +6,15 @@ export enum ColumnsActions {
   ADD_NEW_COLUMN = 'ADD_NEW_COLUMN',
   ADD_NEW_CARD = 'ADD_NEW_CARD',
   CHANGE_COLUMN_NAME = 'CHANGE_COLUMN_NAME',
+  DRAG_HAPPENED = 'DRAG_HAPPENED'
 }
 
 export interface AddNewColumn
   extends PayloadAction<ColumnsActions.ADD_NEW_COLUMN, Column> {
 }
+
+export interface DragCardHappened
+  extends PayloadAction<ColumnsActions.DRAG_HAPPENED, DroppableModel> {}
 
 export interface AddNewCard
   extends PayloadAction<ColumnsActions.ADD_NEW_CARD, IColumnCard> {
@@ -26,6 +30,7 @@ export type UserColumnActions =
   | AddNewColumn
   | AddNewCard
   | ChangeColumnName
+  | DragCardHappened
 
 export function addNewColumn(column: Column): AddNewColumn {
   return {
@@ -47,5 +52,26 @@ export function changeColumnName(name: string, payloadId: string): ChangeColumnN
     type: ColumnsActions.CHANGE_COLUMN_NAME,
     payload: name,
     payloadId,
+  };
+}
+
+ interface DroppableModel {
+  droppableIdStart: string;
+  droppableIdEnd: string;
+  droppableIndexStart: number;
+  droppableIndexEnd: number;
+}
+
+export function sortCards(droppableIdStart: string, droppableIdEnd: string,
+  droppableIndexStart: number, droppableIndexEnd: number):
+  DragCardHappened {
+  return {
+    type: ColumnsActions.DRAG_HAPPENED,
+    payload: {
+      droppableIdStart,
+      droppableIdEnd,
+      droppableIndexStart,
+      droppableIndexEnd,
+    },
   };
 }

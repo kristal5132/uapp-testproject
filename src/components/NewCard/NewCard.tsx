@@ -20,7 +20,7 @@ const NewCard: React.FC<{ columnId: string }> = ({ columnId }) => {
   const addNewCardFunc = () => {
     if (inputValue) {
       dispatch(addNewCard({
-        id: inputValue + Math.floor(Math.random() * 100),
+        id: inputValue + Date.now(),
         name: inputValue,
       }, columnId));
       setInputValue('');

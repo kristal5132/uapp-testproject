@@ -21,7 +21,7 @@ const NewColumn: React.FC = () => {
   const addNewColumnFunc = () => {
     if (inputValue) {
       dispatch(addNewColumn({
-        id: inputValue + Math.floor(Math.random() * 100),
+        id: inputValue + Date.now(),
         name: inputValue,
         cards: [],
       }));

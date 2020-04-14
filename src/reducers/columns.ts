@@ -35,6 +35,39 @@ export const columnsReducer = (state = initialState, action: UserColumnActions) 
           return obj;
         })
       );
+    case ColumnsActions.DRAG_HAPPENED: {
+      const {
+        droppableIdStart,
+        droppableIdEnd,
+        droppableIndexStart,
+        droppableIndexEnd,
+      } = action.payload;
+      const newState = [...state];
+      // in the same column
+      if (droppableIdStart === droppableIdEnd) {
+        const activeColumn = state.find((column: Column) => droppableIdStart === column.id);
+        if (activeColumn !== undefined) {
+          const card = activeColumn.cards.splice(droppableIndexStart, 1);
+          activeColumn.cards.splice(droppableIndexEnd, 0, ...card);
+        }
+      }
+      // to other column
+      if (droppableIdStart !== droppableIdEnd) {
+        // find column where drag happened
+        const columnStart = state.find((column: Column) => droppableIdStart === column.id);
+        // pull out the card from this list
+
+        if (columnStart !== undefined) {
+          const card = columnStart.cards.splice(droppableIndexStart, 1);
+          // find column where drag ended
+          const columnEnd = state.find((column: Column) => droppableIdEnd === column.id);
+          if (columnEnd !== undefined) {
+            columnEnd.cards.splice(droppableIndexEnd, 0, ...card);
+          }
+        }
+      }
+      return newState;
+    }
     default:
       return state;
   }

@@ -4,6 +4,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
+import { Droppable } from 'react-beautiful-dnd';
 import NewCard from '../NewCard';
 import ColumnCard from '../ColumnCard';
 import { IColumnCard } from '../../models/columnCardModel';
@@ -16,6 +17,7 @@ const useStyles = makeStyles((theme: Theme) => {
   return {
     root: {
       width: '275px',
+      maxHeight: '100%',
     },
     button: {
       justifyContent: 'flex-start',
@@ -44,22 +46,29 @@ const DashboardCard: React.FC<{ columnObject: Column }> = ({ columnObject }) => 
   };
 
   return (
-    <Grid item>
-      <Card className={classes.root}>
-        <CardContent className={classes.cardContent}>
-          <TextField variant="outlined" value={inputValue} onChange={handleColumnNameChange} className={classes.textField} />
-        </CardContent>
-        {columnObject.cards.length > 0
-          ? (columnObject.cards as Cards).map((obj: IColumnCard) => (
-            <ColumnCard
-              key={obj.id}
-              name={obj.name}
-            />
-          ))
-          : null}
-        <NewCard columnId={columnObject.id} />
-      </Card>
-    </Grid>
+    <Droppable droppableId={String(columnObject.id)}>
+      {(provided) => (
+        <Grid item {...provided.droppableProps} ref={provided.innerRef}>
+          <Card className={classes.root}>
+            <CardContent className={classes.cardContent}>
+              <TextField variant="outlined" value={inputValue} onChange={handleColumnNameChange} className={classes.textField} />
+            </CardContent>
+            {columnObject.cards.length > 0
+              ? (columnObject.cards as Cards).map((obj: IColumnCard, index) => (
+                <ColumnCard
+                  key={obj.id}
+                  name={obj.name}
+                  id={obj.id}
+                  index={index}
+                />
+              ))
+              : null}
+            {provided.placeholder}
+            <NewCard columnId={columnObject.id} />
+          </Card>
+        </Grid>
+      )}
+    </Droppable>
   );
 };
 
