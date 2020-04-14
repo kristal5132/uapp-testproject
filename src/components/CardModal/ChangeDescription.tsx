@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Button, Card, CardActions, Grid, IconButton, TextField,
 } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
 import Close from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/core/styles';
 import { AddNewCard } from '../../models/addCardButton';
@@ -18,12 +17,10 @@ const useStyles = makeStyles({
     },
   },
   cardAction: {
-    alignItems: 'flex-start',
-    width: '260px',
     paddingTop: '0',
   },
   cardAdd: {
-    width: '275px',
+    display: 'block',
   },
   textField: {
     width: '90%',
@@ -45,12 +42,10 @@ const useStyles = makeStyles({
   },
 });
 
-const AddCardPopup: React.FC<AddNewCard> = (
-  {
-    inputValue,
-    handleChange, addNewItemFunc, placeholder, label,
-  },
-) => {
+export const ChangeDescription: React.FC<AddNewCard> = ({
+  inputValue,
+  handleChange, addNewItemFunc, placeholder, label, description,
+}) => {
   const [isActiveAddCard, setIsActiveAddCard] = useState(false);
   const [displayAddCard, setDisplayAddCard] = useState(true);
 
@@ -58,26 +53,35 @@ const AddCardPopup: React.FC<AddNewCard> = (
     setIsActiveAddCard((prevState: boolean) => !prevState);
     setDisplayAddCard((prevState: boolean) => !prevState);
   };
+
+  const onHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleChange(event);
+    toggleAddCardButton();
+  };
   const classes = useStyles();
   return (
     <Grid item>
       <CardActions className={displayAddCard ? `${classes.cardAction} ${classes.displayCard}`
         : `${classes.cardAction} ${classes.dontDisplayCard}`}
       >
-        <Button size="medium" color="primary" fullWidth className={classes.button} onClick={toggleAddCardButton}>
-          <Add fontSize="small" />
-          {label}
-        </Button>
-      </CardActions>
-      <Card className={isActiveAddCard ? classes.displayCard : classes.dontDisplayCard}>
         <TextField
           placeholder={placeholder}
           variant="outlined"
           className={classes.textField}
-          value={inputValue}
-          onChange={handleChange}
+          value={description !== undefined ? description : inputValue}
+          onChange={onHandleChange}
+          onClick={toggleAddCardButton}
         />
+      </CardActions>
+      <Card className={isActiveAddCard ? classes.displayCard : classes.dontDisplayCard}>
         <CardActions className={classes.cardAdd}>
+          <TextField
+            placeholder={placeholder}
+            variant="outlined"
+            className={classes.textField}
+            value={inputValue}
+            onChange={handleChange}
+          />
           <Button className={classes.addButton} onClick={addNewItemFunc}>
             {label}
           </Button>
@@ -89,5 +93,3 @@ const AddCardPopup: React.FC<AddNewCard> = (
     </Grid>
   );
 };
-
-export default AddCardPopup;

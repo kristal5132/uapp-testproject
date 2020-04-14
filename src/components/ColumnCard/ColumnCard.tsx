@@ -5,6 +5,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { Draggable } from 'react-beautiful-dnd';
 import CardModal from '../CardModal';
+import { ColumnCardIndexed } from '../../models/columnCardIndexed';
 
 const useStyles = makeStyles((theme: Theme) => {
   const { palette } = theme;
@@ -20,24 +21,34 @@ const useStyles = makeStyles((theme: Theme) => {
       },
       padding: '8px 13px 8px 13px',
     },
+    cardModal: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    cardModalWrapper: {
+      maxWidth: '500px',
+      width: '100%',
+      height: '50%',
+    },
   };
 });
 
-// just need to use another index for draggable object,
-// so I'm using this typing instead <IColumnCard>
-const ColumnCard: React.FC <{name: string; id: string; index: number}> = ({ name, id, index }) => {
-  /* const [modalToggler, setModalToggler] = useState(false);
+const ColumnCard: React.FC <ColumnCardIndexed> = ({
+  index, columnId, cardObj,
+}) => {
+  const [modalHandler, setModalHandler] = useState(false);
 
   const handleModalClose = () => {
-    setModalToggler(false);
+    setModalHandler(false);
   };
   const onCardOpen = () => {
-    setModalToggler(true);
-  }; */
+    setModalHandler(true);
+  };
 
   const classes = useStyles();
   return (
-    <Draggable draggableId={id} index={index}>
+    <Draggable draggableId={cardObj.id} index={index}>
       {(provided) => (
         <Grid
           justify="center"
@@ -47,19 +58,27 @@ const ColumnCard: React.FC <{name: string; id: string; index: number}> = ({ name
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <Card className={classes.root}>
+          <Card className={classes.root} onClick={() => onCardOpen()}>
             <CardContent className={classes.cardContent}>
-              <Typography>{name}</Typography>
+              <Typography>{cardObj.name}</Typography>
             </CardContent>
           </Card>
-          {/* <Modal
-            open={modalToggler}
+          <Modal
+            open={modalHandler}
             onClose={handleModalClose}
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
+            className={classes.cardModal}
           >
-            <CardModal/>
-          </Modal> */}
+            <Grid className={classes.cardModalWrapper}>
+              <CardModal
+                cardId={cardObj.id}
+                columnId={columnId}
+                name={cardObj.name}
+                description={cardObj.description}
+              />
+            </Grid>
+          </Modal>
         </Grid>
       )}
     </Draggable>

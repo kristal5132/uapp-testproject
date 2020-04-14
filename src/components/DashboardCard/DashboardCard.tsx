@@ -56,9 +56,9 @@ const DashboardCard: React.FC<{ columnObject: Column }> = ({ columnObject }) => 
             {columnObject.cards.length > 0
               ? (columnObject.cards as Cards).map((obj: IColumnCard, index) => (
                 <ColumnCard
+                  cardObj={obj}
+                  columnId={columnObject.id}
                   key={obj.id}
-                  name={obj.name}
-                  id={obj.id}
                   index={index}
                 />
               ))
