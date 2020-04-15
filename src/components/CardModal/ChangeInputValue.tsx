@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Button, Card, CardActions, Grid, IconButton, TextField,
+  Button, Card, CardActions, IconButton, TextField, CardContent
 } from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/core/styles';
@@ -24,7 +24,6 @@ const useStyles = makeStyles({
   },
   textField: {
     width: '90%',
-    padding: '10px',
   },
   addButton: {
     textTransform: 'inherit',
@@ -36,13 +35,14 @@ const useStyles = makeStyles({
   },
   displayCard: {
     display: 'block',
+    padding: 0,
   },
   dontDisplayCard: {
     display: 'none',
   },
 });
 
-export const ChangeDescription: React.FC<AddNewCard> = ({
+export const ChangeInputValue: React.FC<AddNewCard> = ({
   inputValue,
   handleChange, addNewItemFunc, placeholder, label, description,
 }) => {
@@ -56,17 +56,17 @@ export const ChangeDescription: React.FC<AddNewCard> = ({
 
   const onHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleChange(event);
-    toggleAddCardButton();
   };
   const classes = useStyles();
   return (
-    <Grid item>
+    <>
       <CardActions className={displayAddCard ? `${classes.cardAction} ${classes.displayCard}`
         : `${classes.cardAction} ${classes.dontDisplayCard}`}
       >
         <TextField
+          multiline
           placeholder={placeholder}
-          variant="outlined"
+          variant="standard"
           className={classes.textField}
           value={description !== undefined ? description : inputValue}
           onChange={onHandleChange}
@@ -75,14 +75,23 @@ export const ChangeDescription: React.FC<AddNewCard> = ({
       </CardActions>
       <Card className={isActiveAddCard ? classes.displayCard : classes.dontDisplayCard}>
         <CardActions className={classes.cardAdd}>
-          <TextField
-            placeholder={placeholder}
-            variant="outlined"
-            className={classes.textField}
-            value={inputValue}
-            onChange={handleChange}
-          />
-          <Button className={classes.addButton} onClick={addNewItemFunc}>
+          <CardContent>
+            <TextField
+              multiline
+              placeholder={placeholder}
+              variant="outlined"
+              className={classes.textField}
+              value={inputValue}
+              onChange={handleChange}
+            />
+          </CardContent>
+          <Button
+            className={classes.addButton}
+            onClick={() => {
+              addNewItemFunc();
+              toggleAddCardButton();
+            }}
+          >
             {label}
           </Button>
           <IconButton aria-label="close" onClick={toggleAddCardButton}>
@@ -90,6 +99,6 @@ export const ChangeDescription: React.FC<AddNewCard> = ({
           </IconButton>
         </CardActions>
       </Card>
-    </Grid>
+    </>
   );
 };

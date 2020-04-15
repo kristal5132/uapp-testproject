@@ -24,8 +24,6 @@ const useStyles = makeStyles({
   },
 });
 
-
-
 const App: React.FC = () => {
   const dispatch = useDispatch();
   const classes = useStyles();

@@ -1,3 +1,4 @@
+import { Moment } from 'moment';
 import { PayloadAction } from './payloadAction';
 import { Column } from '../models/column';
 import { IColumnCard } from '../models/columnCardModel';
@@ -5,7 +6,8 @@ import { DroppableModel } from '../models/droppable';
 import { AddNewCardModel } from '../models/addNewCardModel';
 import { ChangeColumnNameModel } from '../models/changeColumnNameModel';
 import { AddDescriptionModel } from '../models/addDescModel';
-import {AddDateModel} from '../models/addDateModel';
+import { AddDateModel } from '../models/addDateModel';
+import { ChangeCardNameModel } from '../models/changeCardNameModel';
 
 export enum ColumnsActions {
   ADD_NEW_COLUMN = 'ADD_NEW_COLUMN',
@@ -14,6 +16,13 @@ export enum ColumnsActions {
   DRAG_HAPPENED = 'DRAG_HAPPENED',
   ADD_DESCRIPTION = 'ADD_DESCRIPTION',
   ADD_DATE = 'ADD_DATE',
+  CHANGE_CARD_NAME = 'CHANGE_CARD_NAME',
+  DELETE_COLUMN = 'DELETE_COLUMN',
+}
+
+
+export interface DeleteColumn
+  extends PayloadAction<ColumnsActions.DELETE_COLUMN, string> {
 }
 
 export interface AddDescription
@@ -39,6 +48,10 @@ export interface ChangeColumnName
   extends PayloadAction<ColumnsActions.CHANGE_COLUMN_NAME, ChangeColumnNameModel> {
 }
 
+export interface ChangeCardName
+  extends PayloadAction<ColumnsActions.CHANGE_CARD_NAME, ChangeCardNameModel> {
+}
+
 export type UserColumnActions =
   | AddNewColumn
   | AddNewCard
@@ -46,6 +59,27 @@ export type UserColumnActions =
   | DragCardHappened
   | AddDescription
   | AddDate
+  | ChangeCardName
+  | DeleteColumn
+
+
+export function deleteColumn(id: string): DeleteColumn {
+  return {
+    type: ColumnsActions.DELETE_COLUMN,
+    payload: id,
+  };
+}
+
+export function changeCardNameInColumn(name: string, id: string, columnId: string): ChangeCardName {
+  return {
+    type: ColumnsActions.CHANGE_CARD_NAME,
+    payload: {
+      name,
+      id,
+      columnId,
+    },
+  };
+}
 
 export function addDescriptionToCard(
   description: string, id: string, columnId: string,
@@ -61,7 +95,7 @@ export function addDescriptionToCard(
 }
 
 export function addDateToCard(
-  date: string, id: string, columnId: string,
+  date: Moment, id: string, columnId: string,
 ): AddDate {
   return {
     type: ColumnsActions.ADD_DATE,

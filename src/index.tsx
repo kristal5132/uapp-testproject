@@ -3,19 +3,21 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import { ThemeProvider } from '@material-ui/core';
 import { Provider } from 'react-redux';
+import MomentUtils from '@date-io/moment';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { theme } from './theme/theme';
 import { store } from './store';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
+  <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
         <App />
-      </ThemeProvider>
-    </Provider>
-  </React.StrictMode>,
+      </MuiPickersUtilsProvider>
+    </ThemeProvider>
+  </Provider>,
   document.getElementById('root'),
 );
 

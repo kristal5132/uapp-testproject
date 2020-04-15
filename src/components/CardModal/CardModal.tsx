@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import {
-  Card, CardContent, Typography, TextField,
+  Card, CardContent, TextField, Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
-import { addDescriptionToCard } from '../../actions/columns';
-import { ChangeDescription } from './ChangeDescription';
+import MomentUtils from '@date-io/moment';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import moment, { Moment } from 'moment';
+import { addDateToCard, addDescriptionToCard, changeCardNameInColumn } from '../../actions/columns';
+import { ChangeInputValue } from './ChangeInputValue';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     width: 200,
     marginTop: '20px',
   },
-  description: {
+  margins: {
     marginBottom: '20px',
   },
 }));
@@ -31,64 +34,80 @@ interface CardModalModel {
   columnId: string;
   name: string;
   description?: string;
+  date?: string;
 }
 
 const CardModal: React.FC <CardModalModel> = ({
-  cardId, columnId, name, description,
+  cardId, columnId, name, description, date,
 }) => {
   const classes = useStyles();
-  const [inputValue, setInputValue] = useState(() => {
+  const dispatch = useDispatch();
+
+  const [descriptionValue, setDescriptionValue] = useState(() => {
     if (description !== undefined) {
       return description;
     } return '';
   });
 
-  const dispatch = useDispatch();
+  const [nameValue, setNameValue] = useState(name);
+
+  const handleCardNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNameValue(event.target.value);
+    if (event.target.value) {
+      dispatch(changeCardNameInColumn(event.target.value, cardId, columnId));
+    }
+  };
+
+  const [selectedDate, handleDateChange] = useState<Moment | null>(() => {
+    if (date !== undefined) {
+      return moment(date);
+    } return moment();
+  });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
+    setDescriptionValue(event.target.value);
   };
 
   const addDescription = () => {
-    if (inputValue) {
-      dispatch(addDescriptionToCard(inputValue, cardId, columnId));
+    if (descriptionValue) {
+      dispatch(addDescriptionToCard(descriptionValue, cardId, columnId));
+    }
+  };
+
+  const addEndTime = (newDate: Moment | null) => {
+    if (newDate) {
+      dispatch(addDateToCard(newDate, cardId, columnId));
+      handleDateChange(newDate);
     }
   };
 
   return (
-    <Card className={classes.root}>
-      <CardContent>
+    <>
+      <Card className={classes.root}>
         <CardContent>
-          <Typography variant="h5">{name}</Typography>
-        </CardContent>
-        <CardContent>
-          <Typography variant="h5" component="h5" className={classes.description}>Описание</Typography>
-          <ChangeDescription
-            inputValue={inputValue}
-            handleChange={handleChange}
-            addNewItemFunc={addDescription}
-            label="Добавить"
-            placeholder="Добавить более подробное описание"
-            description={description}
-          />
-        </CardContent>
-        <CardContent>
-          <Typography variant="h5">Изменение даты выполнения</Typography>
-          <form className={classes.container} noValidate>
-            <TextField
-              id="datetime-local"
-              label="Next appointment"
-              type="datetime-local"
-              defaultValue="2017-05-24T10:30"
-              className={classes.textField}
-              InputLabelProps={{
-                shrink: true,
-              }}
+          <CardContent>
+            <TextField multiline variant="standard" value={nameValue} onChange={handleCardNameChange} />
+          </CardContent>
+          <CardContent>
+            <Typography variant="h5" component="h5" className={classes.margins}>Описание</Typography>
+            <ChangeInputValue
+              inputValue={descriptionValue}
+              handleChange={handleChange}
+              addNewItemFunc={addDescription}
+              label="Добавить"
+              placeholder="Добавить более подробное описание"
+              description={description}
             />
-          </form>
+          </CardContent>
+          <CardContent>
+            <Typography variant="h5" className={classes.margins}>Изменение даты выполнения</Typography>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <DateTimePicker value={selectedDate} onChange={(val) => addEndTime(val)} />
+            </MuiPickersUtilsProvider>
+          </CardContent>
         </CardContent>
-      </CardContent>
-    </Card>
+      </Card>
+    </>
   );
 };
 

@@ -5,54 +5,52 @@ import { loadState } from '../localStorage';
 import { Columns } from '../models/columns';
 import { IColumnCard } from '../models/columnCardModel';
 import { Cards } from '../models/cards';
+import { AddDescriptionModel } from '../models/addDescModel';
+import { AddDateModel } from '../models/addDateModel';
+import { ChangeCardNameModel } from '../models/changeCardNameModel';
 
 const loadedState = loadState();
 const initialState: DashboardState = loadedState !== undefined ? loadedState : [];
+
+type PayloadType =
+  AddDescriptionModel
+  | AddDateModel
+  | ChangeCardNameModel
+
+const editCard = (state: Columns, keyName: string, payload: PayloadType): Columns => (
+  (state as Columns).map((obj: Column) => {
+    if (obj.id === payload.columnId) {
+      return {
+        ...obj,
+        cards: (obj.cards as Cards).map((card: IColumnCard) => {
+          if (card.id === payload.id) {
+            return {
+              ...card,
+              [keyName]: payload[keyName as keyof PayloadType],
+            };
+          } return card;
+        }),
+      };
+    } return obj;
+  })
+);
 
 export const columnsReducer = (state = initialState, action: UserColumnActions) => {
   switch (action.type) {
     case ColumnsActions.ADD_NEW_COLUMN:
       return [...state, action.payload];
 
-    case ColumnsActions.ADD_DESCRIPTION: {
-      return (
-        (state as Columns).map((obj: Column) => {
-          if (obj.id === action.payload.columnId) {
-            return {
-              ...obj,
-              cards: (obj.cards as Cards).map((card: IColumnCard) => {
-                if (card.id === action.payload.id) {
-                  return {
-                    ...card,
-                    description: action.payload.description,
-                  };
-                } return card;
-              }),
-            };
-          } return obj;
-        })
-      );
-    }
+    case ColumnsActions.DELETE_COLUMN:
+      return (state as Columns).filter((obj: Column) => obj.id !== action.payload);
 
-    case ColumnsActions.ADD_DATE: {
-      return (
-        (state as Columns).map((obj: Column) => {
-          if (obj.id === action.payload.columnId) {
-            return {
-              ...obj,
-              cards: (obj.cards as Cards).map((card: IColumnCard) => {
-                if (card.id === action.payload.id) {
-                  return {
-                    ...card,
-                    description: action.payload.date,
-                  };
-                } return card;
-              }),
-            };
-          } return obj;
-        })
-      );
-    }
+    case ColumnsActions.ADD_DESCRIPTION:
+      return editCard(state, 'description', action.payload);
+
+    case ColumnsActions.CHANGE_CARD_NAME:
+      return editCard(state, 'name', action.payload);
+
+    case ColumnsActions.ADD_DATE:
+      return editCard(state, 'date', action.payload);
 
     case ColumnsActions.ADD_NEW_CARD:
       return (

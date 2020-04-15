@@ -1,5 +1,7 @@
+import { Moment } from 'moment';
+
 export interface AddDateModel {
-  date: string;
+  date: Moment;
   id: string;
   columnId: string;
 }
