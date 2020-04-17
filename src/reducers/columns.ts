@@ -4,41 +4,17 @@ import { DashboardState } from '../models/dashboardState';
 import { Column } from '../models/column';
 import { loadState } from '../localStorage';
 import { Columns } from '../models/columns';
-import { IColumnCard } from '../models/columnCardModel';
-import { Cards } from '../models/cards';
-import { AddDescriptionModel } from '../models/addDescModel';
-import { AddDateModel } from '../models/addDateModel';
-import { ChangeCardNameModel } from '../models/changeCardNameModel';
-import { userActions } from '../models/userActions';
+import { UserActions } from '../models/userActions';
 import { CardActions } from '../actions/cards';
+import editCard from '../utils/editCard';
 
 const loadedState = loadState();
 const initialState: DashboardState = loadedState !== undefined ? loadedState : [];
 
-type PayloadType =
-  | AddDescriptionModel
-  | AddDateModel
-  | ChangeCardNameModel
 
-const editCard = (state: Columns, keyName: string, payload: PayloadType): Columns => (
-  (state as Columns).map((obj: Column) => {
-    if (obj.id === payload.columnId) {
-      return {
-        ...obj,
-        cards: (obj.cards as Cards).map((card: IColumnCard) => {
-          if (card.id === payload.id) {
-            return {
-              ...card,
-              [keyName]: payload[keyName as keyof PayloadType],
-            };
-          } return card;
-        }),
-      };
-    } return obj;
-  })
-);
-
-export const columnsReducer: Reducer<DashboardState, userActions> = (state = initialState, action) => {
+export const columnsReducer: Reducer<DashboardState, UserActions> = (
+  state = initialState, action,
+) => {
   switch (action.type) {
     case ColumnActions.ADD_NEW_COLUMN:
       return [...state, action.payload];

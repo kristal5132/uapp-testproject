@@ -15,12 +15,12 @@ const useStyles = makeStyles({
     padding: '20px 30px 0',
   },
   headerWrapper: {
-    height: '70px',
+    height: 70,
     alignItems: 'center',
     color: '#FFF',
   },
   mainWrapper: {
-    paddingTop: '20px',
+    paddingTop: 70,
   },
 });
 
