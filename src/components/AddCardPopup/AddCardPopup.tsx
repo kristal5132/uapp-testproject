@@ -11,28 +11,29 @@ const useStyles = makeStyles({
   button: {
     justifyContent: 'flex-start',
     textTransform: 'inherit',
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    height: '40px',
+    backgroundColor: '#FFFFFFB3',
+    height: 40,
     '&:hover': {
-      backgroundColor: 'rgba(255,255,255,0.5)',
+      backgroundColor: '#FFFFFF80',
     },
   },
   cardAction: {
     alignItems: 'flex-start',
-    width: '260px',
+    width: 260,
     paddingTop: '0',
   },
   cardAdd: {
-    width: '275px',
+    maxWidth: 275,
+    width: '100%',
   },
   textField: {
     width: '90%',
-    padding: '10px',
+    padding: 10,
   },
   addButton: {
     textTransform: 'inherit',
     backgroundColor: '#61BD4F',
-    color: '#FFFFFF',
+    color: '#FFF',
     '&:hover': {
       backgroundColor: '#53BD00',
     },

@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import MomentUtils from '@date-io/moment';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import moment, { Moment } from 'moment';
-import { addDateToCard, addDescriptionToCard, changeCardNameInColumn } from '../../actions/columns';
+import { addDateToCard, addDescriptionToCard, changeCardNameInColumn } from '../../actions/cards';
 import { ChangeInputValue } from './ChangeInputValue';
 
 const useStyles = makeStyles((theme) => ({
@@ -22,15 +22,15 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     width: 200,
-    marginTop: '20px',
+    marginTop: 20,
   },
   margins: {
-    marginBottom: '20px',
+    marginBottom: 20,
   },
 }));
 
 interface CardModalModel {
-  cardId: string;
+  id: string;
   columnId: string;
   name: string;
   description?: string;
@@ -38,28 +38,25 @@ interface CardModalModel {
 }
 
 const CardModal: React.FC <CardModalModel> = ({
-  cardId, columnId, name, description, date,
+  id, columnId, name, description, date,
 }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const [descriptionValue, setDescriptionValue] = useState(() => {
-    if (description !== undefined) {
-      return description;
-    } return '';
-  });
+  const [descriptionValue, setDescriptionValue] = useState(description || '');
 
   const [nameValue, setNameValue] = useState(name);
 
   const handleCardNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNameValue(event.target.value);
-    if (event.target.value) {
-      dispatch(changeCardNameInColumn(event.target.value, cardId, columnId));
+    const { value } = event.target;
+    setNameValue(value);
+    if (value) {
+      dispatch(changeCardNameInColumn(value, id, columnId));
     }
   };
 
   const [selectedDate, handleDateChange] = useState<Moment | null>(() => {
-    if (date !== undefined) {
+    if (date) {
       return moment(date);
     } return moment();
   });
@@ -69,14 +66,12 @@ const CardModal: React.FC <CardModalModel> = ({
   };
 
   const addDescription = () => {
-    if (descriptionValue) {
-      dispatch(addDescriptionToCard(descriptionValue, cardId, columnId));
-    }
+    dispatch(addDescriptionToCard(descriptionValue, id, columnId));
   };
 
   const addEndTime = (newDate: Moment | null) => {
     if (newDate) {
-      dispatch(addDateToCard(newDate, cardId, columnId));
+      dispatch(addDateToCard(newDate, id, columnId));
       handleDateChange(newDate);
     }
   };
@@ -94,7 +89,7 @@ const CardModal: React.FC <CardModalModel> = ({
               inputValue={descriptionValue}
               handleChange={handleChange}
               addNewItemFunc={addDescription}
-              label="Добавить"
+              label="Сохранить"
               placeholder="Добавить более подробное описание"
               description={description}
             />
@@ -102,7 +97,7 @@ const CardModal: React.FC <CardModalModel> = ({
           <CardContent>
             <Typography variant="h5" className={classes.margins}>Изменение даты выполнения</Typography>
             <MuiPickersUtilsProvider utils={MomentUtils}>
-              <DateTimePicker value={selectedDate} onChange={(val) => addEndTime(val)} />
+              <DateTimePicker value={selectedDate} onChange={addEndTime} />
             </MuiPickersUtilsProvider>
           </CardContent>
         </CardContent>

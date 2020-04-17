@@ -8,7 +8,7 @@ import { State } from '../../models/dashboardState';
 import { Columns } from '../../models/columns';
 
 const Main: React.FC = () => {
-  const columns = useSelector((state: State) => state.columns);
+  const columns = useSelector((state: State) => state.columns.present);
 
   useEffect(() => {
     localStorage.setItem('columns', JSON.stringify(columns));

@@ -5,6 +5,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { Draggable } from 'react-beautiful-dnd';
 import QueryBuilder from '@material-ui/icons/QueryBuilder';
+import Description from '@material-ui/icons/Description';
 import moment, { Moment } from 'moment';
 import CardModal from '../CardModal';
 import { ColumnCardIndexed } from '../../models/columnCardIndexed';
@@ -15,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => {
     root: {
       width: '90%',
       backgroundColor: palette.secondary.main,
-      margin: '7px 0 10px 0',
+      margin: '7px 0 10px',
       transition: '0.2s',
       '&:hover': {
         backgroundColor: 'rgba(235, 236, 240, 0.5)',
@@ -23,12 +24,13 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     cardTypography: {
       overflowWrap: 'break-word',
+      marginBottom: 10,
     },
     cardContent: {
       '&:last-child': {
-        paddingBottom: '8px',
+        paddingBottom: 8,
       },
-      padding: '8px 13px 8px 13px',
+      padding: '8px 13px',
     },
     cardModal: {
       display: 'flex',
@@ -36,21 +38,20 @@ const useStyles = makeStyles((theme: Theme) => {
       alignItems: 'center',
     },
     cardModalWrapper: {
-      maxWidth: '500px',
+      maxWidth: 500,
       width: '100%',
       height: '50%',
     },
     cardDate: {
-      display: 'flex',
-      maxWidth: '110px',
+      display: 'inline-block',
+      maxWidth: 110,
       width: '100%',
       backgroundColor: 'transparent',
-      padding: '5px',
-      marginTop: '10px',
-      boxShadow: 'none',
+      padding: 5,
+      marginRight: 10,
     },
     cardDateIcon: {
-      marginRight: '5px',
+      marginRight: 5,
     },
     cardDateWarning: {
       backgroundColor: '#F2D600',
@@ -78,12 +79,11 @@ const ColumnCard: React.FC <ColumnCardIndexed> = ({
     if (now.diff(cardDate, 'days') < 0) {
       return classes.cardDate;
     }
-    if (now.diff(cardDate, 'days') === 0) {
-      if (now.diff(cardDate) < 0) {
-        return `${classes.cardDate} ${classes.cardDateWarning}`;
-      }
+    if (now.diff(cardDate) < 0) {
+      return `${classes.cardDate} ${classes.cardDateWarning}`;
     } return `${classes.cardDate} ${classes.cardDateOver}`;
   };
+
   const cardDateClass = checkDateClose(moment(cardObj.date));
 
   return (
@@ -97,7 +97,7 @@ const ColumnCard: React.FC <ColumnCardIndexed> = ({
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <Card className={classes.root} onClick={() => onCardOpen()}>
+          <Card className={classes.root} onClick={onCardOpen}>
             <CardContent className={classes.cardContent}>
               <Typography className={classes.cardTypography}>{cardObj.name}</Typography>
               {cardObj.date && (
@@ -106,22 +106,18 @@ const ColumnCard: React.FC <ColumnCardIndexed> = ({
                 {moment(cardObj.date).format('MMM Do')}
               </Card>
               )}
+              {cardObj.description && <Description /> }
             </CardContent>
           </Card>
           <Modal
             open={modalHandler}
             onClose={handleModalClose}
-            aria-labelledby="simple-modal-title"
-            aria-describedby="simple-modal-description"
             className={classes.cardModal}
           >
             <Grid className={classes.cardModalWrapper}>
               <CardModal
-                cardId={cardObj.id}
+                {...cardObj}
                 columnId={columnId}
-                name={cardObj.name}
-                description={cardObj.description}
-                date={cardObj.date}
               />
             </Grid>
           </Modal>

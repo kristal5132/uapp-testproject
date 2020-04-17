@@ -10,7 +10,7 @@ import NewCard from '../NewCard';
 import ColumnCard from '../ColumnCard';
 import { IColumnCard } from '../../models/columnCardModel';
 import { Column } from '../../models/column';
-import {changeColumnName, deleteColumn} from '../../actions/columns';
+import { changeColumnName, deleteColumn } from '../../actions/columns';
 import { Cards } from '../../models/cards';
 import DeleteDialog from '../Dialog';
 
@@ -18,8 +18,13 @@ const useStyles = makeStyles((theme: Theme) => {
   const { palette } = theme;
   return {
     root: {
-      width: '275px',
-      maxHeight: '100%',
+      width: '100%',
+      maxWidth: 275,
+      maxHeight: '85vh',
+      overflowY: 'auto',
+      '&::-webkit-scrollbar': {
+        display: 'none',
+      },
     },
     button: {
       justifyContent: 'flex-start',
@@ -27,12 +32,12 @@ const useStyles = makeStyles((theme: Theme) => {
       color: palette.primary.main,
     },
     cardContent: {
-      padding: '8px 16px 8px 16px',
+      padding: '8px 16px',
       display: 'flex',
       alignItems: 'center',
     },
     textField: {
-      height: '35px',
+      height: 35,
       flexDirection: 'row',
     },
   };
@@ -58,15 +63,16 @@ const DashboardCard: React.FC<{ columnObject: Column }> = ({ columnObject }) => 
   };
 
   const handleColumnNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-    if (event.target.value) {
-      dispatch(changeColumnName(event.target.value, columnObject.id));
+    const { value } = event.target;
+    setInputValue(value);
+    if (value) {
+      dispatch(changeColumnName(value, columnObject.id));
     }
   };
 
 
   return (
-    <Droppable droppableId={String(columnObject.id)}>
+    <Droppable droppableId={columnObject.id}>
       {(provided) => (
         <Grid item {...provided.droppableProps} ref={provided.innerRef}>
           <Card className={classes.root}>
@@ -82,15 +88,14 @@ const DashboardCard: React.FC<{ columnObject: Column }> = ({ columnObject }) => 
               />
             </CardContent>
             {columnObject.cards.length > 0
-              ? (columnObject.cards as Cards).map((obj: IColumnCard, index) => (
+              && (columnObject.cards as Cards).map((obj: IColumnCard, index) => (
                 <ColumnCard
                   cardObj={obj}
                   columnId={columnObject.id}
                   key={obj.id}
                   index={index}
                 />
-              ))
-              : null}
+              ))}
             {provided.placeholder}
             <NewCard columnId={columnObject.id} />
           </Card>

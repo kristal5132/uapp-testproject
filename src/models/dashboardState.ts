@@ -1,7 +1,11 @@
 import { Columns } from './columns';
 
 export interface State {
-  columns: DashboardState;
+  columns: {
+    past: DashboardState;
+    present: DashboardState;
+    future: DashboardState;
+  };
 }
 
 export type DashboardState =

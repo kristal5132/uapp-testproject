@@ -1,4 +1,5 @@
-import { ColumnsActions, UserColumnActions } from '../actions/columns';
+import { Reducer } from 'redux';
+import { ColumnActions } from '../actions/columns';
 import { DashboardState } from '../models/dashboardState';
 import { Column } from '../models/column';
 import { loadState } from '../localStorage';
@@ -8,12 +9,14 @@ import { Cards } from '../models/cards';
 import { AddDescriptionModel } from '../models/addDescModel';
 import { AddDateModel } from '../models/addDateModel';
 import { ChangeCardNameModel } from '../models/changeCardNameModel';
+import { userActions } from '../models/userActions';
+import { CardActions } from '../actions/cards';
 
 const loadedState = loadState();
 const initialState: DashboardState = loadedState !== undefined ? loadedState : [];
 
 type PayloadType =
-  AddDescriptionModel
+  | AddDescriptionModel
   | AddDateModel
   | ChangeCardNameModel
 
@@ -35,24 +38,24 @@ const editCard = (state: Columns, keyName: string, payload: PayloadType): Column
   })
 );
 
-export const columnsReducer = (state = initialState, action: UserColumnActions) => {
+export const columnsReducer: Reducer<DashboardState, userActions> = (state = initialState, action) => {
   switch (action.type) {
-    case ColumnsActions.ADD_NEW_COLUMN:
+    case ColumnActions.ADD_NEW_COLUMN:
       return [...state, action.payload];
 
-    case ColumnsActions.DELETE_COLUMN:
+    case ColumnActions.DELETE_COLUMN:
       return (state as Columns).filter((obj: Column) => obj.id !== action.payload);
 
-    case ColumnsActions.ADD_DESCRIPTION:
+    case CardActions.ADD_DESCRIPTION:
       return editCard(state, 'description', action.payload);
 
-    case ColumnsActions.CHANGE_CARD_NAME:
+    case CardActions.CHANGE_CARD_NAME:
       return editCard(state, 'name', action.payload);
 
-    case ColumnsActions.ADD_DATE:
+    case CardActions.ADD_DATE:
       return editCard(state, 'date', action.payload);
 
-    case ColumnsActions.ADD_NEW_CARD:
+    case ColumnActions.ADD_NEW_CARD:
       return (
         (state as Columns).map((obj: Column) => {
           if (obj.id === action.payload.columnId) {
@@ -65,7 +68,7 @@ export const columnsReducer = (state = initialState, action: UserColumnActions) 
         })
       );
 
-    case ColumnsActions.CHANGE_COLUMN_NAME:
+    case ColumnActions.CHANGE_COLUMN_NAME:
       return (
         (state as Columns).map((obj: Column) => {
           if (obj.id === action.payload.columnId) {
@@ -78,7 +81,7 @@ export const columnsReducer = (state = initialState, action: UserColumnActions) 
         })
       );
 
-    case ColumnsActions.DRAG_HAPPENED: {
+    case CardActions.DRAG_HAPPENED: {
       const {
         droppableIdStart,
         droppableIdEnd,

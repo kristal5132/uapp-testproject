@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Button, Card, CardActions, IconButton, TextField, CardContent
+  Button, Card, CardActions, IconButton, TextField, CardContent,
 } from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,14 +10,14 @@ const useStyles = makeStyles({
   button: {
     justifyContent: 'flex-start',
     textTransform: 'inherit',
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    height: '40px',
+    backgroundColor: '#FFFFFFB3',
+    height: 40,
     '&:hover': {
-      backgroundColor: 'rgba(255,255,255,0.5)',
+      backgroundColor: '#FFFFFF80',
     },
   },
   cardAction: {
-    paddingTop: '0',
+    paddingTop: 0,
   },
   cardAdd: {
     display: 'block',
@@ -28,7 +28,7 @@ const useStyles = makeStyles({
   addButton: {
     textTransform: 'inherit',
     backgroundColor: '#61BD4F',
-    color: '#FFFFFF',
+    color: '#FFF',
     '&:hover': {
       backgroundColor: '#53BD00',
     },
@@ -46,6 +46,7 @@ export const ChangeInputValue: React.FC<AddNewCard> = ({
   inputValue,
   handleChange, addNewItemFunc, placeholder, label, description,
 }) => {
+  const classes = useStyles();
   const [isActiveAddCard, setIsActiveAddCard] = useState(false);
   const [displayAddCard, setDisplayAddCard] = useState(true);
 
@@ -57,7 +58,12 @@ export const ChangeInputValue: React.FC<AddNewCard> = ({
   const onHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleChange(event);
   };
-  const classes = useStyles();
+
+  const onDescriptionChange = () => {
+    addNewItemFunc();
+    toggleAddCardButton();
+  };
+
   return (
     <>
       <CardActions className={displayAddCard ? `${classes.cardAction} ${classes.displayCard}`
@@ -68,7 +74,7 @@ export const ChangeInputValue: React.FC<AddNewCard> = ({
           placeholder={placeholder}
           variant="standard"
           className={classes.textField}
-          value={description !== undefined ? description : inputValue}
+          value={description || inputValue}
           onChange={onHandleChange}
           onClick={toggleAddCardButton}
         />
@@ -87,10 +93,7 @@ export const ChangeInputValue: React.FC<AddNewCard> = ({
           </CardContent>
           <Button
             className={classes.addButton}
-            onClick={() => {
-              addNewItemFunc();
-              toggleAddCardButton();
-            }}
+            onClick={onDescriptionChange}
           >
             {label}
           </Button>

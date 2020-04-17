@@ -13,10 +13,11 @@ const NewCard: React.FC<{ columnId: string }> = ({ columnId }) => {
 
   const addNewCardFunc = () => {
     if (inputValue) {
-      dispatch(addNewCard({
+      const card = {
         id: inputValue + Date.now(),
         name: inputValue,
-      }, columnId));
+      };
+      dispatch(addNewCard(card, columnId));
       setInputValue('');
     }
   };

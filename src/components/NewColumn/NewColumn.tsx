@@ -13,11 +13,12 @@ const NewColumn: React.FC = () => {
 
   const addNewColumnFunc = () => {
     if (inputValue) {
-      dispatch(addNewColumn({
+      const column = {
         id: inputValue + Date.now(),
         name: inputValue,
         cards: [],
-      }));
+      };
+      dispatch(addNewColumn(column));
       setInputValue('');
     }
   };
