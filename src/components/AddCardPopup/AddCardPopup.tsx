@@ -23,8 +23,7 @@ const useStyles = makeStyles({
     paddingTop: '0',
   },
   cardAdd: {
-    maxWidth: 275,
-    width: '100%',
+    width: 275,
   },
   textField: {
     width: '90%',
