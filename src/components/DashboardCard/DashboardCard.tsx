@@ -20,7 +20,9 @@ const useStyles = makeStyles((theme: Theme) => {
     root: {
       width: '100%',
       maxWidth: 275,
-      maxHeight: '85vh',
+    },
+    columnContainer: {
+      maxHeight: '65vh',
       overflowY: 'auto',
       '&::-webkit-scrollbar': {
         display: 'none',
@@ -87,7 +89,8 @@ const DashboardCard: React.FC<{ columnObject: Column }> = ({ columnObject }) => 
                 handleDialogSuccess={handleDeleteDialogSuccess}
               />
             </CardContent>
-            {columnObject.cards.length > 0
+            <Grid container item className={classes.columnContainer}>
+              {columnObject.cards.length > 0
               && (columnObject.cards as Cards).map((obj: IColumnCard, index) => (
                 <ColumnCard
                   cardObj={obj}
@@ -96,7 +99,8 @@ const DashboardCard: React.FC<{ columnObject: Column }> = ({ columnObject }) => 
                   index={index}
                 />
               ))}
-            {provided.placeholder}
+              {provided.placeholder}
+            </Grid>
             <NewCard columnId={columnObject.id} />
           </Card>
         </Grid>

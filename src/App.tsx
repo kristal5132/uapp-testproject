@@ -20,7 +20,7 @@ const useStyles = makeStyles({
     color: '#FFF',
   },
   mainWrapper: {
-    paddingTop: 70,
+    paddingTop: 30,
   },
 });
 
